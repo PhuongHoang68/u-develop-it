@@ -48,7 +48,7 @@ app.get('/api/parties', (req, res)=> {
 });
 
 //route to display one party
-app.get('/api/parties:id', (req, res)=> {
+app.get('/api/party/:id', (req, res)=> {
     const sql = `SELECT * FROM parties WHERE id = ?`;
     const params = [req.params.id];
     db.query(sql, params, (err, row)=> {
@@ -71,6 +71,7 @@ app.delete('/api/party/:id', (req, res)=> {
     db.query(sql, params, (err, result)=>{
         if(err){
             res.status(400).json({error: res.message});
+            //400 means a bad query, no reponse found, not a good route bc there's no informatio
         } else if (!result.affectedRows) {
             res.json({
                 message: ' Party not found'
@@ -88,8 +89,10 @@ app.delete('/api/party/:id', (req, res)=> {
 
 
 
+
+
 // CANDIDATES TABLE ROUTES
-// Get all candidates
+// Get all candidates and their party affiliation
 app.get('/api/candidates', (req, res) => {
     const sql = `SELECT candidates.*, parties.name
     AS party_name
@@ -140,7 +143,7 @@ app.put('/api/candidate/:id', (req, res) => {
     });
   });
 
-// Get a single candidate
+// Get a single candidate with party affiliation
 app.get('/api/candidate/:id', (req, res) => {
     const sql = `SELECT candidates.*, parties.name 
              AS party_name 
@@ -209,7 +212,8 @@ app.post('/api/candidate', ({ body }, res) => {
       }
       res.json({
         message: 'success',
-        data: body
+        data: body, 
+        changes: result.affectedRows
       });
     });
   });
@@ -220,7 +224,14 @@ app.use((req, res)=>{
     res.status(404).end();
 });
 
-//app port listen functions
+
+//Start server after DB connection
+db.connect(err=> {
+    if(err) throw err;
+    console.log('Database connected.');
+    //app port listen functions
 app.listen(PORT, ()=> {
     console.log(`Server running on port ${PORT}`);
 });
+
+})
