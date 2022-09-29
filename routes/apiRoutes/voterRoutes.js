@@ -30,6 +30,7 @@ router.get('/voter/:id', (req, res)=> {
     db.query(sql, params, (err, row)=>{
         if(err){
             res.status(400).json({error: err.message});
+            return;
         }
         res.json({
             message: "success",
