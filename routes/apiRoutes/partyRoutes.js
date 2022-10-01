@@ -26,7 +26,8 @@ router.get('/party/:id', (req, res)=> {
     const params = [req.params.id];
     db.query(sql, params, (err, row)=> {
         if(err) {
-            res.status(400).json({ error: err.message});
+            //more specific error message than error message on line 47
+            res.status(400).json({ error: err.message}); 
             return;
 
         }
@@ -43,7 +44,7 @@ router.delete('/party/:id', (req, res)=> {
     const params = [req.params.id];
     db.query(sql, params, (err, result)=>{
         if(err){
-            res.status(400).json({error: res.message});
+            res.status(400).json({error: res.message}); 
             //400 means a bad query, no reponse found, not a good route bc there's no informatio
         } else if (!result.affectedRows) {
             res.json({

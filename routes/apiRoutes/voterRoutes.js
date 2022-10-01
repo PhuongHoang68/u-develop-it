@@ -41,6 +41,7 @@ router.get('/voter/:id', (req, res)=> {
 
 
 //route to create a user
+//{} destructs to grab a specific from the object "req"    
 router.post('/voter', ({body}, res)=> {
     //Data validation
     const errors = inputCheck(body, 'first_name', 'last_name', 'email');
